@@ -106,16 +106,21 @@
 
     /* Progress Bar Styling */
     .progress-container {
-      width: 100%;
+      width: 80%; /* Set a specific width for the progress bar */
+      max-width: 600px; /* Limit the maximum width */
+      margin: 20px auto; /* Center the progress bar and add vertical spacing */
       background-color: #f3f3f3;
       height: 25px;
       border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for better appearance */
     }
 
     #progress-bar {
       height: 100%;
       background-color: #4caf50;
       border-radius: 10px;
+      width: 0%; /* Start with 0% width */
+      transition: width 0.5s ease; /* Smooth transition for width changes */
     }
   </style>
 </head>
@@ -140,7 +145,7 @@
 
     <!-- Phone Number -->
     <div class="question-container">
-      <div class="question">Phone Number (numbers only, no spaces, hyphens, parentheses):</div>
+      <div class="question">Phone Number (Include country code; numbers only, no spaces, hyphens, parentheses; Example: 18081234123):</div>
       <input type="text" id="phone" required pattern="\d+" placeholder="Enter your phone number">
     </div>
 
@@ -266,7 +271,7 @@
       const range = 'Sheet1!O3:P3';  // The range for Total Donations (O3) and Goal (P3)
 
       // Google Sheets API URL to fetch the data
-      const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=YOUR_API_KEY`;
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=/AIzaSyDmLFivgKlEqX5D8wQrYJx_SCvoiPvINL8`;
 
       fetch(url)
         .then(response => response.json())
@@ -305,5 +310,14 @@
         console.error("Error:", error);
       });
     });
+
+    // Fetch data from Google Sheets and log it
+    fetch(`https://sheets.googleapis.com/v4/spreadsheets/1EXU9HC1jFm1hgmdQsNVTSasG8tBsRg1Oy9wkHiStwMM/values/Sheet1!A1:D10?key=${API_KEY}`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => console.error('Error:', error));
   </script>
-</body
+</body>
+</html>
