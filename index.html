@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>WATCH THE AIRPLANE TAKE FLIGHT AS THE DONATIONS FLY!</title>
   <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
   <style>
+    /* Global Styles */
     body {
       font-family: 'Indie Flower', cursive;
       color: darkblue;
@@ -14,17 +15,74 @@
       padding: 0;
       text-align: center;
     }
-
     .important, .highlight-amount {
       color: #6699FF; /* Light blue */
       font-size: 1.2em;
       font-weight: bold;
     }
-
     .highlight-amount {
       font-size: 2em; /* Bigger size for $4000 */
     }
+    .description {
+      margin-left: 2cm;
+      margin-right: 2cm;
+      text-align: center;
+      font-size: 20px;
+      line-height: 1.8;
+    }
 
+    /* Progress Text */
+    .progress-text {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .progress-text span {
+      font-size: 26px;
+      font-weight: bold;
+      color: #0066cc;
+    }
+
+    /* Progress Bar */
+    .progress-container {
+      width: 100%;
+      background-color: #f3f3f3;
+      border-radius: 10px;
+      position: relative;
+      height: 40px;
+      margin: 20px 0;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #progress-bar {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(to right, #ADD8E6, #003366);
+      border-radius: 10px;
+      position: absolute;
+      transition: width 0.5s ease, background-color 0.5s ease;
+    }
+    #airplane {
+      position: absolute;
+      top: -30px;
+      font-size: 30px;
+      z-index: 2;
+      transition: left 0.5s ease;
+    }
+    #goal-flag {
+      position: absolute;
+      top: -10px;
+      right: 0;
+      width: 60px;
+      height: 40px;
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Flag_of_Spain.svg/2560px-Flag_of_Spain.svg.png');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    /* Donation Form Styling */
     .form-container {
       max-width: 600px;
       margin: 30px auto;
@@ -32,14 +90,15 @@
       border: 2px solid #003366;
       border-radius: 10px;
       background-color: #f9f9f9;
-    }
-
-    .question {
       text-align: left;
+    }
+    .question {
       font-weight: bold;
       margin: 10px 0;
     }
-
+    .question-container {
+      margin-bottom: 20px;
+    }
     input, select, textarea {
       width: 100%;
       padding: 10px;
@@ -47,12 +106,11 @@
       border-radius: 5px;
       border: 1px solid #ccc;
       box-sizing: border-box;
+      font-size: 16px;
     }
-
     .button-container {
       text-align: center;
     }
-
     .submit-btn {
       background-color: #003366;
       color: white;
@@ -62,129 +120,129 @@
       cursor: pointer;
       font-size: 1.2em;
     }
-
     .submit-btn:hover {
       background-color: #6699FF;
     }
 
-    .incentive-container {
+    /* Incentives Row Styling */
+    .incentives-row {
       display: flex;
-      justify-content: center;
-      gap: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .incentives-row .label-title {
+      min-width: 160px;
+      font-weight: bold;
+    }
+    .incentives-row label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
     }
 
-    .incentive-container label {
-      display: inline-block;
-      text-align: left;
+    /* Incentive Specifics */
+    #incentiveSpecifics {
+      display: none;
+      margin-top: 20px;
     }
-
-    .payment-method-container {
-      display: inline-block;
-      width: 45%;
-      text-align: left;
-    }
-
     .time-of-donation {
       color: gray;
       font-size: 0.9em;
-    }
-
-    .incentive-specifics {
-      display: none;
-    }
-
-    .question-container {
-      text-align: left;
-      margin-bottom: 20px;
-    }
-
-    .description {
-      margin-left: 2cm;
-      margin-right: 2cm;
-      text-align: center;
-    }
-
-    /* Progress Bar Styling */
-    .progress-container {
-      width: 80%; /* Set a specific width for the progress bar */
-      max-width: 600px; /* Limit the maximum width */
-      margin: 20px auto; /* Center the progress bar and add vertical spacing */
-      background-color: #f3f3f3;
-      height: 25px;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for better appearance */
-    }
-
-    #progress-bar {
-      height: 100%;
-      background-color: #4caf50;
-      border-radius: 10px;
-      width: 0%; /* Start with 0% width */
-      transition: width 0.5s ease; /* Smooth transition for width changes */
     }
   </style>
 </head>
 <body>
 
+  <!-- Progress Text -->
+  <div class="progress-text">
+    Total Donations: <span id="total-donations">$0</span> / $4000
+  </div>
+  <div class="progress-text">
+    Progress: <span id="progress-percent">0%</span>
+  </div>
+
+  <!-- Progress Container -->
+  <div class="progress-container">
+    <div id="progress-bar"></div>
+    <div id="airplane">✈️</div>
+    <div id="goal-flag"></div>
+  </div>
+
+  <!-- Title & Description -->
   <h1 style="font-weight: bold; color: darkblue;">WATCH THE AIRPLANE TAKE FLIGHT AS THE DONATIONS FLY!</h1>
-  <p class="description">Hi everybody! I would just like to say $<span class="highlight-amount">4000</span> is an estimated <span class="important">MINIMUM</span> amount for the flight from Hawaii to Madrid. Hopefully, the airfare prices won't spike! So I'm hoping the donates to go <span class="important">OVER</span>! Please share this and <span class="important">encourage</span> others to donate--<span class="important">every bit helps!</span></p>
+  <p class="description">
+    Hi everybody! I would just like to say $<span class="highlight-amount">4000</span> is an estimated 
+    <span class="important">MINIMUM</span> amount for the flight from Hawaii to Madrid. 
+    Hopefully, the airfare prices won't spike! So I'm hoping the donations go 
+    <span class="important">OVER</span>! Please share this and 
+    <span class="important">encourage</span> others to donate--<span class="important">every bit helps!</span>
+  </p>
   <p>Any questions? <a href="mailto:agca0acali23@gmail.com">agca0acali23@gmail.com</a></p>
   <p>-- Cali Aguilar</p>
 
-  <!-- Progress Bar -->
-  <div class="progress-container">
-    <div id="progress-bar"></div>
-  </div>
-
+  <!-- Donation Form -->
   <form id="donationForm" class="form-container">
-    <!-- Email -->
+    <!-- Email Field --> 
     <div class="question-container">
       <div class="question">Email (make sure it is a valid email!):</div>
-      <input type="email" id="email" required placeholder="Enter your email">
+      <input type="email" id="email" name="email" required placeholder="Enter your email">
     </div>
 
-    <!-- Phone Number -->
+    <!-- Phone Number Field -->
     <div class="question-container">
-      <div class="question">Phone Number (Include country code; numbers only, no spaces, hyphens, parentheses; Example: 18081234123):</div>
-      <input type="text" id="phone" required pattern="\d+" placeholder="Enter your phone number">
+      <div class="question">Phone Number (numbers only):</div>
+      <input type="text" id="phone" name="phone" required pattern="\\d+" placeholder="Enter your phone number">
     </div>
 
-    <!-- Donation Amount -->
+    <!-- Donation Amount Field -->
     <div class="question-container">
       <div class="question">Donation Amount:</div>
-      <input type="number" id="donationAmount" required min="1" placeholder="Enter donation amount">
+      <input type="number" id="donationAmount" name="donationAmount" required min="1" placeholder="Enter donation amount">
     </div>
 
-    <!-- Incentives -->
-    <div id="incentives" class="incentive-container">
-      <div class="question">Incentives (select if your donation qualifies):</div>
-      <label><input type="checkbox" id="postcard" value="Postcard"> $120: Handwritten postcard from Madrid with a thank-you note!</label>
-      <label><input type="checkbox" id="snacks" value="Snacks"> $160: Spanish snacks (Pre-packaged items)</label>
-      <label><input type="checkbox" id="souvenir" value="Souvenir"> $200: Souvenir from Spain (Keychain, magnet, bracelet, ring, etc...)</label>
+    <!-- Incentives Row (Checkboxes enabled based on donation threshold) -->
+    <div class="question-container">
+      <div class="incentives-row">
+        <div class="label-title">Incentives (select if your donation qualifies):</div>
+        <label>
+          <input type="checkbox" id="postcard" name="incentives" value="Postcard" disabled>
+          $120: Handwritten postcard from Madrid with a thank-you note!
+        </label>
+        <label>
+          <input type="checkbox" id="snacks" name="incentives" value="Snacks" disabled>
+          $160: Spanish snacks (Pre-packaged items)
+        </label>
+        <label>
+          <input type="checkbox" id="souvenir" name="incentives" value="Souvenir" disabled>
+          $200: Souvenir from Spain (Keychain, magnet, bracelet, ring, etc...)
+        </label>
+      </div>
     </div>
 
-    <!-- Incentive specifics -->
-    <div id="incentiveSpecifics" class="incentive-specifics">
+    <!-- Incentive Specifics Section -->
+    <div id="incentiveSpecifics">
       <div class="question">If you selected any incentives, please provide more details:</div>
-
-      <div id="allergiesSection">
+      <div class="question-container" id="allergiesSection">
         <div class="question">If you selected Spanish snacks, any allergies or food details I should know?</div>
-        <textarea id="allergies"></textarea>
+        <textarea id="allergies" name="allergies"></textarea>
       </div>
-
-      <div id="souvenirSection">
+      <div class="question-container" id="souvenirSection">
         <div class="question">If you selected a souvenir from Spain, any specifics like jewelry size or item suggestions?</div>
-        <textarea id="souvenirDetails"></textarea>
+        <textarea id="souvenirDetails" name="souvenirDetails"></textarea>
       </div>
-
-      <div class="question">Mailing Address (if applicable, or Face to Face Delivery):</div>
-      <textarea id="mailingAddress"></textarea>
+      <div class="question-container">
+        <div class="question">Mailing Address (if applicable, or Face to Face Delivery):</div>
+        <textarea id="mailingAddress" name="address"></textarea>
+      </div>
     </div>
 
     <!-- Payment Method -->
     <div class="question-container">
       <div class="question">Payment Method:</div>
-      <select id="paymentMethod" required>
+      <select id="paymentMethod" name="payment" required>
         <option value="Venmo">Venmo</option>
         <option value="PayPal">PayPal</option>
         <option value="Cash">Cash</option>
@@ -194,19 +252,19 @@
     <!-- Transaction ID -->
     <div class="question-container">
       <div class="question">Transaction ID (for Venmo, PayPal, etc...):</div>
-      <input type="text" id="transactionId" placeholder="Enter transaction ID">
+      <input type="text" id="transactionId" name="transaction" placeholder="Enter transaction ID">
     </div>
 
     <!-- Optional Message -->
     <div class="question-container">
       <div class="question">Optional Message (up to 250 characters):</div>
-      <textarea id="message" maxlength="250" placeholder="Write a message"></textarea>
+      <textarea id="message" name="message" maxlength="250" placeholder="Write a message"></textarea>
     </div>
 
-    <!-- Display Message -->
+    <!-- Display Message Option -->
     <div class="question-container">
       <div class="question">Would you like your message displayed publicly?</div>
-      <select id="messageDisplay">
+      <select id="messageDisplay" name="displayMsg">
         <option value="Yes">Yes</option>
         <option value="No">No</option>
       </select>
@@ -224,100 +282,103 @@
   </form>
 
   <script>
-    // Show/Hide Incentives based on donation amount
-    document.getElementById("donationAmount").addEventListener("input", function() {
-      var amount = parseInt(this.value);
-      var incentivesSection = document.getElementById("incentives");
-      var specificsSection = document.getElementById("incentiveSpecifics");
-      
-      if (amount >= 120) {
-        incentivesSection.style.display = "block";
-      } else {
-        incentivesSection.style.display = "none";
-        specificsSection.style.display = "none";
-      }
-      
-      if (amount >= 160) {
-        document.getElementById("snacks").disabled = false;
-      } else {
-        document.getElementById("snacks").disabled = true;
-      }
-
-      if (amount >= 200) {
-        document.getElementById("souvenir").disabled = false;
-      } else {
-        document.getElementById("souvenir").disabled = true;
-      }
-    });
-
-    // Handle incentive specifics
-    document.querySelectorAll("input[type=checkbox]").forEach(function(checkbox) {
-      checkbox.addEventListener("change", function() {
-        var specificsSection = document.getElementById("incentiveSpecifics");
-        if (document.querySelectorAll("input[type=checkbox]:checked").length > 0) {
-          specificsSection.style.display = "block";
-        } else {
-          specificsSection.style.display = "none";
-        }
-      });
-    });
-
-    // Set current date and time
+    // Initialize date/time
     document.getElementById("time-of-donation").textContent = new Date().toLocaleString();
 
-    // Function to update the progress bar based on data from Google Sheets
-    function updateProgressBar() {
-      const sheetId = '1EXU9HC1jFm1hgmdQsNVTSasG8tBsRg1Oy9wkHiStwMM';  // Your Google Sheets ID
-      const range = 'Sheet1!O3:P3';  // The range for Total Donations (O3) and Goal (P3)
+    // Logic for enabling/disabling incentive checkboxes based on donation
+    document.getElementById("donationAmount").addEventListener("input", function() {
+      var amount = parseInt(this.value) || 0;
+      var postcard = document.getElementById("postcard");
+      var snacks = document.getElementById("snacks");
+      var souvenir = document.getElementById("souvenir");
 
-      // Google Sheets API URL to fetch the data
-      const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=/AIzaSyDmLFivgKlEqX5D8wQrYJx_SCvoiPvINL8`;
+      // $120 threshold
+      if (amount >= 120) { postcard.disabled = false; }
+      else { postcard.disabled = true; postcard.checked = false; }
 
-      fetch(url)
-        .then(response => response.json())
-        .then(data => {
-          const totalDonations = parseFloat(data.values[0][0]);
-          const goal = parseFloat(data.values[0][1]);
+      // $160 threshold
+      if (amount >= 160) { snacks.disabled = false; }
+      else { snacks.disabled = true; snacks.checked = false; }
 
-          if (!isNaN(totalDonations) && !isNaN(goal)) {
-            const progressPercentage = (totalDonations / goal) * 100;
-            document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
-          }
-        })
-        .catch(error => {
-          console.error('Error fetching data from Google Sheets:', error);
-        });
-    }
+      // $200 threshold
+      if (amount >= 200) { souvenir.disabled = false; }
+      else { souvenir.disabled = true; souvenir.checked = false; }
 
-    // Call the updateProgressBar function when the page loads
-    window.onload = updateProgressBar;
-
-    // Submit form data to Google Sheets via Web App URL
-    document.getElementById("donationForm").addEventListener("submit", function(event) {
-      event.preventDefault();
-
-      var formData = new FormData(this);
-      var webAppUrl = "https://script.google.com/macros/s/AKfycbxBMYXVFbBVbbkPVqbgj9ZzRTZ8eY5-VnS7VrlqV_-EfKzASfb7V4xBTDjQXJ1EkKiQ/exec";
-
-      fetch(webAppUrl, {
-        method: "POST",
-        body: formData
-      })
-      .then(function(response) {
-        alert("Thank you for your donation! ✈️🇪🇸");
-      })
-      .catch(function(error) {
-        console.error("Error:", error);
-      });
+      toggleIncentiveSpecifics();
     });
 
-    // Fetch data from Google Sheets and log it
-    fetch(`https://sheets.googleapis.com/v4/spreadsheets/1EXU9HC1jFm1hgmdQsNVTSasG8tBsRg1Oy9wkHiStwMM/values/Sheet1!A1:D10?key=${API_KEY}`)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-      })
-      .catch(error => console.error('Error:', error));
+    // Show/hide incentive specifics if any incentive is checked
+    document.querySelectorAll("#postcard, #snacks, #souvenir").forEach(function(box) {
+      box.addEventListener("change", toggleIncentiveSpecifics);
+    });
+    function toggleIncentiveSpecifics() {
+      var specificsSection = document.getElementById("incentiveSpecifics");
+      var anyChecked = document.querySelectorAll("#postcard:checked, #snacks:checked, #souvenir:checked").length > 0;
+      specificsSection.style.display = anyChecked ? "block" : "none";
+    }
+
+    // Update progress bar: total-donations, progress-percent, airplane position, etc.
+    function updateProgressBar(totalDonations, goal) {
+      // Calculate progress
+      var progress = (totalDonations / goal) * 100;
+      var bar = document.getElementById("progress-bar");
+      var airplane = document.getElementById("airplane");
+
+      // Cap at 100%
+      progress = Math.min(progress, 100);
+      bar.style.width = progress + "%";
+
+      // Move airplane
+      var containerWidth = document.querySelector(".progress-container").offsetWidth - 30; // plane width
+      airplane.style.left = (progress / 100) * containerWidth + "px";
+
+      // Update text
+      document.getElementById("total-donations").textContent = "$" + totalDonations.toFixed(2);
+      document.getElementById("progress-percent").textContent = progress.toFixed(1) + "%";
+    }
+
+    // Initialize progress bar with 0 donations
+    updateProgressBar(0, 4000);
+
+    // For testing, let the user manually set total donations to see the plane move
+    document.getElementById("donationAmount").addEventListener("change", function() {
+      var amt = parseFloat(this.value) || 0;
+      updateProgressBar(amt, 4000);
+    });
+
+// On form submit
+document.getElementById("donationForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  // Gather form data
+  const formData = new FormData(event.target);
+  const data = {};
+  formData.forEach((value, key) => {
+    data[key] = value;
+  });
+
+  // Send data to Google Sheets
+  fetch("https://script.google.com/macros/s/AKfycbx0dluizDeAy5g0WCBn45suLhS_0K8m0fsp8OEZ1BAInSeoHU9u3XqP6m-OmHlsPzwZ/exec", {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.result === "success") {
+        alert("Thank you! Your donation has been recorded.");
+        event.target.reset(); // Clear the form
+      } else {
+        alert("Something went wrong. Please try again.");
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("Error submitting the form.");
+    });
+});
   </script>
 </body>
 </html>
